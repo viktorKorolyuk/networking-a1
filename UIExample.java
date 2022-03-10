@@ -1,5 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,14 +43,30 @@ public class UIExample {
     date.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent evt) {
-        printDate();
+        try {
+          printDate();
+        } catch (UnknownHostException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     });
 
     time.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent evt) {
-        printTime();
+        try {
+          printTime();
+        } catch (UnknownHostException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     });
 
@@ -62,19 +84,22 @@ public class UIExample {
     f.show(); // show the frame with the components
   }
 
-  public void printDate() {
+  public void printDate() throws UnknownHostException, IOException {
 
-    Calendar date = Calendar.getInstance();
-    l.setText("Date: " + (date.get(Calendar.MONTH + 1) + "/" + date.get(Calendar.DAY_OF_MONTH)) + "/"
-        + date.get(Calendar.YEAR));
-
+    Socket soc = new Socket(InetAddress.getLocalHost(), 5217);
+    BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+    String date = in.readLine();
+    l.setText("Server Date: " + date.substring(0, 10) + date.substring(23, 28) + "\n");
+    soc.close();
   }
 
-  public void printTime() {
+  public void printTime() throws UnknownHostException, IOException {
 
-    Calendar time = Calendar.getInstance();
-    l.setText("Time: " + time.get(Calendar.HOUR) + ":" + time.get(Calendar.MINUTE) + ":" + time.get(Calendar.SECOND));
-
+    Socket soc = new Socket(InetAddress.getLocalHost(), 5217);
+    BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+    String time = in.readLine();
+    l.setText("Server Time: " + time.substring(11, 23) + "\n");
+    soc.close();
   }
 
   // all programs must have a main

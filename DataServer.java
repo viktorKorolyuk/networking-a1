@@ -9,7 +9,7 @@ class DateServer {
             System.out.println("Waiting For Connection ...");
             Socket soc = s.accept();
             DataOutputStream out = new DataOutputStream(soc.getOutputStream());
-            out.writeBytes("Server Date: " + (new Date()).toString() + "\n");
+            out.writeBytes(new Date().toString());
             out.close();
             soc.close();
         }
