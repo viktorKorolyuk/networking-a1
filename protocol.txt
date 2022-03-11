@@ -1,4 +1,4 @@
-Protocol:
+DateProtocol
 
 |----|-|
 |DSRV|F|
@@ -7,3 +7,5 @@ Protocol:
 "F" is a bitmask containing the desired operation. The protocol currently defines two operations:
   0x1 => Request the current date in MM/dd/yyyy format.
   0x2 => Request the current time in h:m:s format.
+
+On an invalid request the server sends the error message prefixed with "ERROR: ".
