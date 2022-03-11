@@ -1,0 +1,9 @@
+Protocol:
+
+|----|-|
+|DSRV|F|
+
+"DSRV" is the 4-byte HEADER to indicate the protocol to the server.
+"F" is a bitmask containing the desired operation. The protocol currently defines two operations:
+  0x1 => Request the current date in MM/dd/yyyy format.
+  0x2 => Request the current time in h:m:s format.
