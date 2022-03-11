@@ -3,11 +3,13 @@ import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -81,25 +83,29 @@ public class UIExample {
       }
     });
 
-    f.show(); // show the frame with the components
+    f.setVisible(true); // show the frame with the components
   }
 
   public void printDate() throws UnknownHostException, IOException {
 
-    Socket soc = new Socket(InetAddress.getLocalHost(), 5217);
-    BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-    String date = in.readLine();
-    l.setText("Server Date: " + date.substring(0, 10) + date.substring(23, 28) + "\n");
-    soc.close();
+    DataClient.requestData(1, new DataClient.Callback<String>() {
+
+      @Override
+      public void onResult(String s) {
+        l.setText("Server Date: " + s + "\n");
+      }
+
+    });
   }
 
   public void printTime() throws UnknownHostException, IOException {
+    DataClient.requestData(2, new DataClient.Callback<String>() {
 
-    Socket soc = new Socket(InetAddress.getLocalHost(), 5217);
-    BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-    String time = in.readLine();
-    l.setText("Server Time: " + time.substring(11, 23) + "\n");
-    soc.close();
+      @Override
+      public void onResult(String s) {
+        l.setText("Server Time: " + s + "\n");
+      }
+    });
   }
 
   // all programs must have a main
@@ -107,5 +113,4 @@ public class UIExample {
   public static void main(String[] args) {
     new UIExample();
   }
-
 }
